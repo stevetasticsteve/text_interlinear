@@ -5,13 +5,14 @@ import os
 import xml.etree.ElementTree as ET
 
 from jinja2 import Environment, FileSystemLoader
-from . import settings
+import settings
 
 
 def read_wordlist():
     with open(settings.word_list_file, 'r', encoding='utf8') as csvfile:
         reader = csv.reader(csvfile)
-    return [str(w).lstrip("'[").rstrip("]'") for w in reader]
+        words = [str(w).lstrip("'[").rstrip("]'") for w in reader]
+    return words
 
 
 def parse_xml(xml_file):

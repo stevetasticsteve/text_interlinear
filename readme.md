@@ -1,6 +1,6 @@
 # Text interlinearizer
 A simple python script that turns a language texts filed in an .xml into a interlinear .html file.
-[!interlinear_example]()
+![interlinear_example](https://raw.githubusercontent.com/stevetasticsteve/text_interlinear/master/interlinear_example.jpg)
 
 ## Requirements
 - Jinja2

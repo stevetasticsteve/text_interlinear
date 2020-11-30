@@ -48,7 +48,7 @@ def parse_xml(xml_file):
 
 def html_it(texts, user):
     # Use a Jinja template to create the web page
-    file_loader = FileSystemLoader(os.path.join(settings.code_folder, 'code'))
+    file_loader = FileSystemLoader(settings.code_folder)
     env = Environment(loader=file_loader, autoescape=True)
     template = env.get_template('text_template.j2')
     file_name = user + '_texts.html'
@@ -84,6 +84,6 @@ if __name__ == '__main__':
             texts = parse_xml(os.path.join(settings.xml_folder, xml))
             html_it(texts, user)
         except Exception as e:
-            print(e)
+            print("Error: " + e)
     create_index()
 

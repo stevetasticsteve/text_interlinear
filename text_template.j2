@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-16">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="New Tribes Mission">
+    <style>
+    div.interlinear_wrapper{
+    background: hsla(55, 99%, 80%, 50);
+    padding: 5px;
+    overflow: auto;
+    margin: 1em 0;
+}
+ol.sentence{
+    display: inline;
+}
+ol.sentence li[lang=kgu]{
+    font-weight: bold;
+    list-style-type: none;
+}
+ol.sentence li[lang=kgu_missing]{
+    font-weight: bold;
+    list-style-type: none;
+    color: crimson;
+}
+ol.sentence li[lang=eng]{
+    font-family: monospace;
+    list-style-type: none;
+}
+ol.word{
+    padding: .5em;
+    margin-bottom: .5em;
+    background: white;
+    border: 1px dotted #ccc;
+    display: inline-block;
+}
+p.warning{
+    color: crimson;
+}
+
+</style>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <title>Transcribed texts</title>
+</head>
+
+<div class="container-fluid" id="container">
+	<div class="row">
+		<div class="col-sm-2 border d-print-none" id="sidebar">
+			<div data-spy="scroll" data-target="text-nav" data-offset="0">
+				<div class="list-group" role="tablist" id="text-nav">
+					{% for text in texts %}
+						<a href="#text-{{ loop.index }}" class="list-group-item list-group-item-action" data-toggle="list"
+							role="tab">{{text.title}}</a>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-8" id="main_pane">
+			{% for text in texts %}
+			<div class="container" id="text-{{loop.index}}"></div>
+			{% include 'text.j2' %}
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+

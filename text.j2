@@ -1,0 +1,73 @@
+<h1>{{text.title}}</h1>
+
+<ul>
+{% if text.speaker %}       <li>Speaker: {{text.speaker}}</li>                      {% endif %}
+{% if text.date %}          <li>Date: {{text.date}}</li>                            {% endif %}
+{% if text.trans_quality %} <li>Phonetic confidence: {{text.trans_quality}}</li>    {% endif %}
+{% if text.genre %}         <li>Genre: {{text.genre}}</li>                          {% endif %}
+{% if text.filename %}      <li>Recording: {{text.filename}}</li>                   {% endif %}
+{% if text.dialect %}       <li>Dialect: {{text.dialect}}</li>                      {% endif %}
+
+</ul>
+{% if text.filename %}
+<div class="d-print-none">
+<audio controls>
+<source src={{text.filename}} type="audio/mpeg">
+</audio>
+</div>
+{% endif %}
+
+<h3>Kovol</h3>
+{% if text.kovol %}
+<p>{{text.kovol}}</p>
+{% elif text.matat %}
+<p>{{text.matat}}</p>
+{% else %}
+<p>No transcription!</p>
+{% endif %}
+
+{% if text.free %}
+<h3>Free translation</h3>
+<p>{{text.free}}</p>
+{% endif %}
+
+{% if text.literal %}
+<h3>Interlinear</h3>
+
+{% if text.kovol_interlinear|length > text.english_interlinear|length %}
+<p class="warning">Literal text is too short</p>
+{% elif text.kovol_interlinear|length < text.english_interlinear|length %}
+<p class="warning">Literal text is too long</p>
+{% endif %}
+{% endif %}
+
+<div class=interlinear_wrapper>
+<ol class=sentence>
+{% for word in text.kovol_interlinear %}
+	{% if word[-1] == ',' %}
+		{% if word[0:-1] not in wordlist %}
+		<ol class=word>
+			<li lang=kgu_missing>{{word}}</li>
+			<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
+		</ol>
+		{% else %}
+		<ol class=word>
+			<li lang=kgu>{{word}}</li>
+			<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
+		</ol>
+		{% endif %}
+	{% else %}
+		{% if word not in wordlist %}
+		<ol class=word>
+			<li lang=kgu_missing>{{word}}</li>
+			<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
+		</ol>
+		{% else %}
+		<ol class=word>
+			<li lang=kgu>{{word}}</li>
+			<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
+		</ol>
+		{% endif %}
+	{% endif %}
+{% endfor %}
+</ol>

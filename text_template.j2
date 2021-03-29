@@ -4,11 +4,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="New Tribes Mission">
     <style>
-    div.interlinear_wrapper{
+div.interlinear_wrapper{
     background: hsla(55, 99%, 80%, 50);
-    padding: 5px;
+    padding: 1em;
     overflow: auto;
-    margin: 1em 0;
+    margin-bottom: 1em;
+}
+.container {
+    padding-bottom: 2em;
+    margin-bottom: 1em;
 }
 ol.sentence{
     display: inline;
@@ -36,31 +40,97 @@ ol.word{
 p.warning{
     color: crimson;
 }
+header{
+    background: #7289da;
+    width: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+}
+#main-header{
+    color: white;
+    margin: 0;
+    padding-left: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+#main-nav{
+    background: #99aab5;
+    margin: 0;
+    width: 100%;
+    padding-top: 0;
+}
+#main-nav li{
+    margin: 0;
+    padding: 0.75em;
+    column-count: 4;
+    column-width: 300px;
+    column-gap: 20px;
+}
+#main-nav ul{
+    padding: 0.5em;
+    margin: 0;
+}
+#main-nav a:hover{
+    color: white;
+}
+.nav-item{
+    color: #2c2f33;
+    text-decoration: None;
+}
+#main-container{
+    margin-bottom: 1em;
+    padding: 2em;
+}
+footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: #23272a;
+    width: 100%;
+    height: 7%;
+}
+.footer-btn{
+    position: absolute;
+    padding: 0.75em 2em;
+    font-size: large;
+    color: white;
+    text-decoration: None;
+}
+footer a:hover{
+    color: #99aab5;
+}
+body{
+    margin: 0;
+    padding: 0;
+}
 
 </style>
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <title>Transcribed texts</title>
 </head>
 
-<div class="container-fluid" id="container">
-	<div class="row">
-		<div class="col-sm-2 border d-print-none" id="sidebar">
-			<div data-spy="scroll" data-target="text-nav" data-offset="0">
-				<div class="list-group" role="tablist" id="text-nav">
-					{% for text in texts %}
-						<a href="#text-{{ loop.index }}" class="list-group-item list-group-item-action" data-toggle="list"
-							role="tab">{{text.title}}</a>
-					{% endfor %}
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-8" id="main_pane">
-			{% for text in texts %}
-			<div class="container" id="text-{{loop.index}}"></div>
-			{% include 'text.j2' %}
-			</div>
-			{% endfor %}
-		</div>
-	</div>
+<body>
+<header>
+    <h1 id="main-header">Text interlinear</h1>
+</header>
+<nav id="main-nav" class="flex-container">
+    <li>
+    {% for text in texts %}
+    <ul><a href="#text-{{ loop.index }}" class="nav-item">{{text.title}}</a></ul>
+    {% endfor %}
+    </li>
+</nav>
+
+<div id="main-container">
+    {% for text in texts %}
+    <div class="container" id="text-{{loop.index}}">
+        {% include 'text.j2' %}
+    </div>
+    {% endfor %}
 </div>
+
+<footer class="footer">
+    <a href="#main-nav" class="footer-btn">Jump to top</a>
+</footer>
+</body>
 

@@ -11,9 +11,9 @@
 </ul>
 {% if text.filename %}
 <div class="d-print-none">
-<audio controls>
-<source src={{text.filename}} type="audio/mpeg">
-</audio>
+	<audio controls>
+	<source src={{text.filename}} type="audio/mpeg">
+	</audio>
 </div>
 {% endif %}
 
@@ -33,7 +33,6 @@
 
 {% if text.literal %}
 <h3>Interlinear</h3>
-
 {% if text.kovol_interlinear|length > text.english_interlinear|length %}
 <p class="warning">Literal text is too short</p>
 {% elif text.kovol_interlinear|length < text.english_interlinear|length %}
@@ -42,32 +41,33 @@
 {% endif %}
 
 <div class=interlinear_wrapper>
-<ol class=sentence>
-{% for word in text.kovol_interlinear %}
-	{% if word[-1] == ',' %}
-		{% if word[0:-1] not in wordlist %}
-		<ol class=word>
-			<li lang=kgu_missing>{{word}}</li>
-			<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
-		</ol>
+	<ol class=sentence>
+	{% for word in text.kovol_interlinear %}
+		{% if word[-1] == ',' %}
+			{% if word[0:-1] not in wordlist %}
+			<ol class=word>
+				<li lang=kgu_missing>{{word}}</li>
+				<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
+			</ol>
+			{% else %}
+			<ol class=word>
+				<li lang=kgu>{{word}}</li>
+				<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
+			</ol>
+			{% endif %}
 		{% else %}
-		<ol class=word>
-			<li lang=kgu>{{word}}</li>
-			<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
-		</ol>
+			{% if word not in wordlist %}
+			<ol class=word>
+				<li lang=kgu_missing>{{word}}</li>
+				<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
+			</ol>
+			{% else %}
+			<ol class=word>
+				<li lang=kgu>{{word}}</li>
+				<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
+			</ol>
+			{% endif %}
 		{% endif %}
-	{% else %}
-		{% if word not in wordlist %}
-		<ol class=word>
-			<li lang=kgu_missing>{{word}}</li>
-			<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
-		</ol>
-		{% else %}
-		<ol class=word>
-			<li lang=kgu>{{word}}</li>
-			<li lang=eng>{{text.english_interlinear[loop.index0]}}</li>
-		</ol>
-		{% endif %}
-	{% endif %}
-{% endfor %}
-</ol>
+	{% endfor %}
+	</ol>
+</div>

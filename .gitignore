@@ -3,3 +3,6 @@ test_xml**
 settings.py
 .idea/**
 __pycache__**
+server_version/**
+.vscode**
+windows**

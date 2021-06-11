@@ -12,35 +12,43 @@ import datetime
 from jinja2 import Environment, FileSystemLoader
 import settings
 
+
 def initiate_logging():
     # Initiate error logging
     log = logging.getLogger()
     log.setLevel(logging.DEBUG)
     critical_fh = logging.FileHandler(settings.error_log_file)
-    formatter = logging.Formatter('%(message)s')
+    formatter = logging.Formatter("%(message)s")
     critical_fh.setFormatter(formatter)
     critical_fh.setLevel(logging.CRITICAL)
     log.addHandler(critical_fh)
 
     ch = logging.StreamHandler()
-    formatter = logging.Formatter('%(message)s')
+    formatter = logging.Formatter("%(message)s")
     ch.setFormatter(formatter)
     ch.setLevel(logging.DEBUG)
     log.addHandler(ch)
 
     normal = RotatingFileHandler(settings.log_file)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
     normal.setFormatter(formatter)
     normal.setLevel(logging.INFO)
     log.addHandler(normal)
 
     return log
 
+
 def excepthook(exctype, value, tb):
-    logger.critical('''An unhandled error occured, please contact the developer:
+    logger.critical(
+        """An unhandled error occured, please contact the developer:
     Error type : {type}
     Error value: {value}
-    Traceback: {tb}'''.format(type=exctype, value=value, tb=traceback.format_tb(tb)))
+    Traceback: {tb}""".format(
+            type=exctype, value=value, tb=traceback.format_tb(tb)
+        )
+    )
 
 
 def read_wordlist():
@@ -103,7 +111,11 @@ def create_index():
     template = env.get_template("index.j2")
     html_file = os.path.join(settings.html_folder, "index.html")
 
-    pages = [p for p in os.listdir(settings.html_folder) if p != "index.html" and p.endswith(".html")]
+    pages = [
+        p
+        for p in os.listdir(settings.html_folder)
+        if p != "index.html" and p.endswith(".html")
+    ]
     date = datetime.datetime.now().strftime("%-I:%m %p %A %-d %B")
     with open(html_file, "w") as file:
         print(template.render(pages=pages, date=date), file=file)
@@ -112,7 +124,7 @@ def create_index():
 if __name__ == "__main__":
     logger = initiate_logging()
     sys.excepthook = excepthook
-    logger.info("<span style=\"white-space: pre;\">Program ran")
+    logger.info('<span style="white-space: pre;">Program ran')
     wordlist = read_wordlist()
     for xml in os.listdir(settings.xml_folder):
         # don't bother with the user guide to the xml scheme

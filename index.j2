@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="New Tribes Mission">
+    <title>Interlinear index</title>
+</head>
+<body>
+    <h1>Interlinear texts</h1>
+    <h3>Updated {{date}}</h3>
+    <ul>
+    {% for p in pages %}
+    <li>
+        <a href="{{p}}">{{p}}</a>
+    </li>
+    {% endfor %}
+    </ul>
+
+<p>To create a text simply create a .xml file in Team Share/texts that follows <a href="text_xml_schema.md">this scheme</a>. Copy audio files into the audio folder (being very
+careful to spell the name exactly right preceded by /audio.</p>
+<p>audio/2020-11-03Raining_and_digging_a_ditch-Sivil.mp3 for example.</p>
+</body>
+</html>

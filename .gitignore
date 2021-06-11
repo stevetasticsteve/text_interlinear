@@ -6,3 +6,5 @@ __pycache__**
 server_version/**
 .vscode**
 windows**
+log.html
+error_log.html

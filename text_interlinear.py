@@ -2,16 +2,55 @@
 
 import csv
 import os
+import traceback
+import sys
 import xml.etree.ElementTree as ET
+import logging
+from logging.handlers import RotatingFileHandler
+import datetime
 
 from jinja2 import Environment, FileSystemLoader
 import settings
 
+def initiate_logging():
+    # Initiate error logging
+    log = logging.getLogger()
+    log.setLevel(logging.DEBUG)
+    critical_fh = logging.FileHandler(settings.error_log_file)
+    formatter = logging.Formatter('%(message)s')
+    critical_fh.setFormatter(formatter)
+    critical_fh.setLevel(logging.CRITICAL)
+    log.addHandler(critical_fh)
+
+    ch = logging.StreamHandler()
+    formatter = logging.Formatter('%(message)s')
+    ch.setFormatter(formatter)
+    ch.setLevel(logging.DEBUG)
+    log.addHandler(ch)
+
+    normal = RotatingFileHandler(settings.log_file)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    normal.setFormatter(formatter)
+    normal.setLevel(logging.INFO)
+    log.addHandler(normal)
+
+    return log
+
+def excepthook(exctype, value, tb):
+    logger.critical('''An unhandled error occured, please contact the developer:
+    Error type : {type}
+    Error value: {value}
+    Traceback: {tb}'''.format(type=exctype, value=value, tb=traceback.format_tb(tb)))
+
 
 def read_wordlist():
-    with open(settings.word_list_file, "r", encoding="utf8") as csvfile:
-        reader = csv.reader(csvfile)
-        words = [str(w).lstrip("'[").rstrip("]'") for w in reader]
+    try:
+        with open(settings.word_list_file, "r", encoding="utf8") as csvfile:
+            reader = csv.reader(csvfile)
+            words = [str(w).lstrip("'[").rstrip("]'") for w in reader]
+    except FileNotFoundError:
+        logger.error("Word list file not found, can't highlight things in red")
+        return []
     return words
 
 
@@ -59,22 +98,21 @@ def html_it(texts, user):
 
 
 def create_index():
-    # Create a basic index page for Apache to use
-    with open(os.path.join(settings.html_folder, "index.html"), "w") as index_file:
-        index_file.write('<div class="container">')
-        for file in os.listdir(settings.html_folder):
-            if file == "index.html":
-                continue
-            if file.endswith(".html"):
-                index_file.write(
-                    '<h3><li><a href="{filename}">{page}</a></li></h3>'.format(
-                        filename=file, page=file
-                    )
-                )
-        index_file.write("</div>")
+    file_loader = FileSystemLoader(settings.code_folder)
+    env = Environment(loader=file_loader, autoescape=True)
+    template = env.get_template("index.j2")
+    html_file = os.path.join(settings.html_folder, "index.html")
+
+    pages = [p for p in os.listdir(settings.html_folder) if p != "index.html" and p.endswith(".html")]
+    date = datetime.datetime.now().strftime("%-I:%m %p %A %-d %B")
+    with open(html_file, "w") as file:
+        print(template.render(pages=pages, date=date), file=file)
 
 
 if __name__ == "__main__":
+    logger = initiate_logging()
+    sys.excepthook = excepthook
+    logger.info("<span style=\"white-space: pre;\">Program ran")
     wordlist = read_wordlist()
     for xml in os.listdir(settings.xml_folder):
         # don't bother with the user guide to the xml scheme
@@ -88,3 +126,4 @@ if __name__ == "__main__":
         except Exception as e:
             print("Error: " + str(e))
     create_index()
+    logger.info("Program finished \n</span>")

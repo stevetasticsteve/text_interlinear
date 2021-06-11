@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 import logging
 from logging.handlers import RotatingFileHandler
 import datetime
+import shutil
 
 from jinja2 import Environment, FileSystemLoader
 import settings
@@ -120,6 +121,18 @@ def create_index():
     with open(html_file, "w") as file:
         print(template.render(pages=pages, date=date), file=file)
 
+def copy_schema():
+    """Copy the markdown explanation of the xml scheme to the html folder so it can be accessed via the browser"""
+    try:
+        schema = os.path.join(settings.code_folder, "text_xml_schema.md")
+        dest = os.path.join(settings.html_folder, "text_xml_schema.md")
+        shutil.copy(schema, dest)
+    except FileNotFoundError:
+        logger.error('Could not copy xml schema markdown file to html folder, file missing.')
+    except OSError:
+        logger.error('Permission error attempting to copy markdown file to html folder.')
+
+
 
 if __name__ == "__main__":
     logger = initiate_logging()
@@ -138,4 +151,5 @@ if __name__ == "__main__":
         except Exception as e:
             print("Error: " + str(e))
     create_index()
+    copy_schema()
     logger.info("Program finished \n</span>")

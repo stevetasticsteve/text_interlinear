@@ -88,6 +88,7 @@ def parse_xml(xml_file):
         else:
             text["kovol_interlinear"] = text["kovol"].strip().split(" ")
         text["english_interlinear"] = text["literal"].strip().split(" ")
+        text["audio_path"] = os.path.join(settings.audio_folder, text["filename"])
 
         texts.append(text)
 
